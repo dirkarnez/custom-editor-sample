@@ -1,6 +1,11 @@
 import * as vscode from 'vscode';
 import { getNonce } from './util';
 import * as child_process from 'child_process';
+// // @ts-ignore
+// import sbffi = require("./sbffi.node");
+import * as ffi from 'ffi';
+import * as ref from 'ref';
+import * as refStruct from 'ref-struct';
 
 /**
  * Provider for cat scratch editors.
@@ -227,6 +232,42 @@ export class CatScratchEditorProvider implements vscode.CustomTextEditorProvider
 
 		const incrementFunction = (input: number, callback: (err: Error | undefined, result: number) => void) => {
 			child_process.exec("taskmgr");
+			
+			// const winapi: any = {};
+			// winapi.void = ref.types.void;
+			// winapi.PVOID = ref.refType(winapi.void);
+			// winapi.HANDLE = winapi.PVOID;
+			// winapi.HWND = winapi.HANDLE;
+			// winapi.WCHAR = ref.types.char;
+			// winapi.LPCWSTR = ref.types.CString;
+			// winapi.UINT = ref.types.uint;
+
+			// int MessageBox(
+			// 	[in, optional] HWND    hWnd,
+			// 	[in, optional] LPCTSTR lpText,
+			// 	[in, optional] LPCTSTR lpCaption,
+			// 	[in]           UINT    uType
+			//   );
+			//import { getNativeFunction } from '';
+			
+            const user32: any = ffi.Library("user32.dll", {
+				MessageBox: [ 'int', [ ref.refType(ref.types.int), ref.types.CString, ref.types.CString, ref.types.uint ] ]
+            });
+            user32.MessageBox(0, "sss", "sss", 0);
+            
+			// const MessageBeep: any = sbffi.getNativeFunction("user32.dll", "MessageBeep", "bool", ["unsigned int"]);
+			// MessageBeep(4294967295);
+
+	
+			// const user32: any = ffi.Library("user32.dll", {
+			// 	MessageBox: [ 'int', [ ref.refType(ref.types.int), ref.types.CString, ref.types.CString, ref.types.uint ] ]
+			// });
+
+			//user32.MessageBox(0, "sss", "sss", 0);
+			//MessageBox(0, "sss", "sss", 0);
+			// const current: any = ffi.Library('user32.dll',{ 'MessageBoxA': ['int',['int','string','string','int']] }); 
+			// current.MessageBox(0, "sss", "sss", 0);
+
 			callback(undefined, input + 1);
 		};
 		
